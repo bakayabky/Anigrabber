@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+    <header class="bg-blue-600 dark:bg-blue-900 p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold">Anime Database</h1>
+        <button id="theme-toggle" class="focus:outline-none">
+            <svg id="theme-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+            </svg>
+        </button>
+    </header>
+    <main class="container mx-auto p-4">
+        <div class="flex mb-4">
+            <input type="text" id="search-input" class="w-full max-w-md p-2 border border-gray-300 dark:border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 truncate" placeholder="Cari anime..." maxlength="50">
+            <button id="search-button" class="bg-blue-600 dark:bg-blue-800 text-white p-2 rounded-r-md hover:bg-blue-700">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </div>
+        <div id="results" class="overflow-x-auto">
+            <table class="w-full border-collapse border border-gray-300 dark:border-gray-700">
+                <thead>
+                    <tr class="bg-gray-200 dark:bg-gray-800">
+                        <th class="border p-2">Judul Alternatif</th>
+                        <th class="border p-2">Sinopsis</th>
+                        <th class="border p-2">Genre</th>
+                        <th class="border p-2">Tag Tema</th>
+                        <th class="border p-2">Demografi</th>
+                        <th class="border p-2">Tanggal Rilis</th>
+                        <th class="border p-2">Musim Rilis</th>
+                        <th class="border p-2">Rating Penonton</th>
+                        <th class="border p-2">Rating Anime</th>
+                        <th class="border p-2">Studio</th>
+                        <th class="border p-2">Produser</th>
+                    </tr>
+                </thead>
+                <tbody id="anime-table-body"></tbody>
+            </table>
+        </div>
+    </main>
+    <script src="js/script.js"></script>
+</body>
+</html>
