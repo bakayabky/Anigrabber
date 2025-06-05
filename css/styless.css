@@ -1,4 +1,4 @@
-/* Mode Terang */
+/* Transisi Tema */
 body {
     transition: all 0.3s ease;
 }
@@ -9,19 +9,47 @@ body {
     color: #f9fafb;
 }
 
-/* Batasan Teks di Tabel */
-td {
-    max-width: 200px;
+/* Styling Kartu */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.dark .card {
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Batasan Teks */
+.card p {
+    max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
 }
 
-/* Hover Effect */
-td:hover {
+.card p:hover {
     background-color: #e5e7eb;
 }
-.dark td:hover {
-    background-color: #374151;
+.dark .card p:hover {
+    background-color: #4b5563;
+}
+
+/* Responsivitas */
+@media (max-width: 640px) {
+    .card p {
+        font-size: 14px;
+    }
+    .card {
+        padding: 12px;
+    }
 }
