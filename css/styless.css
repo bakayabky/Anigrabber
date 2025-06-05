@@ -1,1 +1,27 @@
+/* Mode Terang */
+body {
+    transition: all 0.3s ease;
+}
 
+/* Mode Gelap */
+.dark {
+    background-color: #1f2937;
+    color: #f9fafb;
+}
+
+/* Batasan Teks di Tabel */
+td {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+/* Hover Effect */
+td:hover {
+    background-color: #e5e7eb;
+}
+.dark td:hover {
+    background-color: #374151;
+}
