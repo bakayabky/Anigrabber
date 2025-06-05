@@ -21,13 +21,20 @@ if (localStorage.getItem('theme') === 'dark') {
 // Pencarian Anime
 const searchButton = document.getElementById('search-button');
 const searchInput = document.getElementById('search-input');
-const animeTableBody = document.getElementById('anime-table-body');
+const resultsContainer = document.getElementById('results');
+const loading = document.getElementById('loading');
+const error = document.getElementById('error');
+const noResults = document.getElementById('no-results');
 
 searchButton.addEventListener('click', async () => {
     const query = searchInput.value.trim();
     if (!query) return;
 
-    animeTableBody.innerHTML = '<tr><td colspan="11" class="text-center p-4">Memuat...</td></tr>';
+    // Tampilkan loading
+    resultsContainer.innerHTML = '';
+    loading.classList.remove('hidden');
+    error.classList.add('hidden');
+    noResults.classList.add('hidden');
 
     try {
         // Ambil data dari Jikan API (MyAnimeList)
@@ -68,9 +75,10 @@ searchButton.addEventListener('click', async () => {
 
         // Tampilkan hasil
         displayResults(mergedData);
-    } catch (error) {
-        animeTableBody.innerHTML = '<tr><td colspan="11" class="text-center p-4 text-red-500">Error saat mengambil data.</td></tr>';
-        console.error(error);
+    } catch (err) {
+        loading.classList.add('hidden');
+        error.classList.remove('hidden');
+        console.error(err);
     }
 });
 
@@ -113,10 +121,10 @@ function mergeAnimeData(malData, anilistData) {
                 demographics: anime.format || 'N/A',
                 release_date: anime.startDate ? `${anime.startDate.day}/${anime.startDate.month}/${anime.startDate.year}` : 'N/A',
                 season: anime.season ? `${anime.season} ${anime.seasonYear}` : 'N/A',
-                rating: 'N/A', // AniList tidak menyediakan rating penonton seperti MAL
+                rating: 'N/A',
                 score: anime.averageScore ? (anime.averageScore / 10).toFixed(1) : 'N/A',
                 studios: anime.studios.nodes.map(s => s.name).join(', ') || 'N/A',
-                producers: 'N/A' // AniList tidak menyediakan data produser
+                producers: 'N/A'
             });
         }
     });
@@ -126,36 +134,39 @@ function mergeAnimeData(malData, anilistData) {
 
 // Fungsi untuk menampilkan hasil
 function displayResults(animes) {
-    animeTableBody.innerHTML = '';
+    loading.classList.add('hidden');
+    resultsContainer.innerHTML = '';
+
     if (animes.length === 0) {
-        animeTableBody.innerHTML = '<tr><td colspan="11" class="text-center p-4">Tidak ada hasil ditemukan.</td></tr>';
+        noResults.classList.remove('hidden');
         return;
     }
 
     animes.forEach(anime => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td class="border p-2" data-clipboard="${anime.title_alternative}">${anime.title_alternative}</td>
-            <td class="border p-2" data-clipboard="${anime.synopsis}">${anime.synopsis}</td>
-            <td class="border p-2" data-clipboard="${anime.genres}">${anime.genres}</td>
-            <td class="border p-2" data-clipboard="${anime.themes}">${anime.themes}</td>
-            <td class="border p-2" data-clipboard="${anime.demographics}">${anime.demographics}</td>
-            <td class="border p-2" data-clipboard="${anime.release_date}">${anime.release_date}</td>
-            <td class="border p-2" data-clipboard="${anime.season}">${anime.season}</td>
-            <td class="border p-2" data-clipboard="${anime.rating}">${anime.rating}</td>
-            <td class="border p-2" data-clipboard="${anime.score}">${anime.score}</td>
-            <td class="border p-2" data-clipboard="${anime.studios}">${anime.studios}</td>
-            <td class="border p-2" data-clipboard="${anime.producers}">${anime.producers}</td>
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.title_alternative}"><strong>Judul Alternatif:</strong> ${anime.title_alternative}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.synopsis}"><strong>Sinopsis:</strong> ${anime.synopsis}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.genres}"><strong>Genre:</strong> ${anime.genres}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.themes}"><strong>Tag Tema:</strong> ${anime.themes}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.demographics}"><strong>Demografi:</strong> ${anime.demographics}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.release_date}"><strong>Tanggal Rilis:</strong> ${anime.release_date}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.season}"><strong>Musim Rilis:</strong> ${anime.season}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.rating}"><strong>Rating Penonton:</strong> ${anime.rating}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.score}"><strong>Rating Anime:</strong> ${anime.score}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.studios}"><strong>Studio:</strong> ${anime.studios}</p>
+            <p class="text-sm sm:text-base mb-2" data-clipboard="${anime.producers}"><strong>Produser:</strong> ${anime.producers}</p>
         `;
-        animeTableBody.appendChild(row);
+        resultsContainer.appendChild(card);
     });
 
     // Tambahkan event listener untuk salin teks
-    animeTableBody.querySelectorAll('td').forEach(cell => {
-        cell.addEventListener('click', () => {
-            const text = cell.getAttribute('data-clipboard');
+    resultsContainer.querySelectorAll('p[data-clipboard]').forEach(element => {
+        element.addEventListener('click', () => {
+            const text = element.getAttribute('data-clipboard');
             navigator.clipboard.writeText(text).then(() => {
-                alert('Teks disalin: ' + text);
+                alert('Teks disalin: ' + text.slice(0, 50) + (text.length > 50 ? '...' : ''));
             });
         });
     });
